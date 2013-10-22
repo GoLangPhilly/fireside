@@ -53,6 +53,11 @@ func wsHandler(ws *websocket.Conn) {
 
 	username := ws.Request().Form.Get("username")
 
+	if _, exists := h.connections[username]; exists {
+		ws.Write([]byte("User with this username exists already!"))
+		ws.Close()
+		return
+	}
 	c := &connection{send: make(chan string, 256), ws: ws, username: username}
 	h.register <- c
 	defer func() { h.unregister <- c }()
