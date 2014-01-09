@@ -5,7 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net"
-    "io"
+_    "io"
 )
 
 type Stream struct {
@@ -41,6 +41,7 @@ type LoginReq struct {
 
 
 func Serve(addr string) {
+    fmt.Println("Server started")
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		// handle error
