@@ -34,7 +34,6 @@ type LoginReq struct {
 }
 
 func Serve(addr string) {
-	fmt.Println("Server started")
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		// handle error
@@ -49,26 +48,7 @@ func Serve(addr string) {
 	}
 }
 
-func ParseIq(request string) (iq Iq, e error) {
-
-	v := LoginReq{}
-
-	err := xml.Unmarshal([]byte(request), &v)
-
-	if err != nil {
-		fmt.Printf("err: %v", err)
-		return v.Iq, err
-	}
-	fmt.Printf("Id: %v\n", v.Iq.Id)
-	return v.Iq, err
-}
-
-func Authenticate(username string, password string) (authXml string) {
-	return "hey"
-}
-
 func handleConnection(conn net.Conn) {
-	fmt.Printf("Handling connection....")
 
     b := xml.NewDecoder(conn)
 	fmt.Fprintf(conn, `<?xml version='1.0'?>
@@ -85,22 +65,19 @@ func handleConnection(conn net.Conn) {
 	for {
         iqData := new(Iq)
         b.Decode(iqData)
-		
 		switch iqData.Type {
-		case "get":
-            r := &Iq{Id: iqData.Id, Type: "result"}
-			r.Query = Query{Xmlns: "jabber:iq:auth"}
-			output, _ := xml.Marshal(r)
-			fmt.Println(string(output))
-			fmt.Fprintf(conn, string(output))
-		case "set":
-			fmt.Println("** Case Set **")
-            i := Iq{Id: iqData.Id, Type: "result"}
-			output2, _ := xml.Marshal(i)
-			fmt.Println(string(output2))
-			fmt.Fprintf(conn, string(output2))
-		default:
-			//fmt.Println(string(line))
+            case "get":
+                r := &Iq{Id: iqData.Id, Type: "result"}
+                r.Query = Query{Xmlns: "jabber:iq:auth"}
+                output, _ := xml.Marshal(r)
+                fmt.Fprintf(conn, string(output))
+            case "set":
+                // Need to perform auth lookup here
+                i := Iq{Id: iqData.Id, Type: "result"}
+                output, _ := xml.Marshal(i)
+                fmt.Fprintf(conn, string(output))
+            default:
+                // Nothing
 		}
 	}
 
