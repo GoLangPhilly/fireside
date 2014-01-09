@@ -48,7 +48,7 @@ func Serve(addr string) {
 
 func handleConnection(conn net.Conn) {
 
-    b := xml.NewDecoder(conn)
+	b := xml.NewDecoder(conn)
 	fmt.Fprintf(conn, `<?xml version='1.0'?>
 		<stream:stream
 			from='localhost'
@@ -61,21 +61,21 @@ func handleConnection(conn net.Conn) {
 
 	fmt.Fprintf(conn, "<stream:features/>")
 	for {
-        iqData := new(Iq)
-        b.Decode(iqData)
+		iqData := new(Iq)
+		b.Decode(iqData)
 		switch iqData.Type {
-            case "get":
-                r := &Iq{Id: iqData.Id, Type: "result"}
-                r.Query = Query{Xmlns: "jabber:iq:auth"}
-                output, _ := xml.Marshal(r)
-                fmt.Fprintf(conn, string(output))
-            case "set":
-                // Need to perform auth lookup here
-                i := Iq{Id: iqData.Id, Type: "result"}
-                output, _ := xml.Marshal(i)
-                fmt.Fprintf(conn, string(output))
-            default:
-                // Nothing
+		case "get":
+			r := &Iq{Id: iqData.Id, Type: "result"}
+			r.Query = Query{Xmlns: "jabber:iq:auth"}
+			output, _ := xml.Marshal(r)
+			fmt.Fprintf(conn, string(output))
+		case "set":
+			// Need to perform auth lookup here
+			i := Iq{Id: iqData.Id, Type: "result"}
+			output, _ := xml.Marshal(i)
+			fmt.Fprintf(conn, string(output))
+		default:
+			// Nothing
 		}
 	}
 
