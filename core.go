@@ -1,10 +1,8 @@
 package main
 
 import (
-	_ "bufio"
 	"encoding/xml"
 	"fmt"
-	_ "io"
 	"net"
 )
 
