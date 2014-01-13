@@ -1,3 +1,6 @@
+[![Build Status](https://secure.travis-ci.org/GoLangPhilly/fireside.png?branch=master)](http://travis-ci.org/GoLangPhilly/fireside)
+
+
 fireside
 ========
 
